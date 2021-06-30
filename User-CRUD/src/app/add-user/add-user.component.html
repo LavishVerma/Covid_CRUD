@@ -1,7 +1,7 @@
 <div class="example-container" >
     <form class="example-form">
-        <div fxLayout="row" fxLayoutAlign="center start">   
-            <mat-form-field appearance="fill">
+        <div fxLayout="row" >   
+            <mat-form-field fxFlex="600" appearance="fill">
                 <mat-label>Name</mat-label>
                 <input matInput>
               </mat-form-field>
@@ -10,7 +10,7 @@
 <div fxLayout="row"  > 
 
 
-    <mat-form-field fxFlex="30" appearance="fill">
+    <mat-form-field  appearance="fill">
         <mat-label>Mobile</mat-label>
         <input matInput>
       </mat-form-field>
@@ -25,13 +25,14 @@
 
 <div fxLayout="row" > 
     <mat-label>Are you Vaccinated?</mat-label> 
-<mat-radio-group aria-label="Select an option">
-    <mat-radio-button value="1">Yes</mat-radio-button>
-    <mat-radio-button value="2">No</mat-radio-button>
+<mat-radio-group (change)="radioChange($event)" aria-label="Select an option">
+    <mat-radio-button value="Yes">Yes</mat-radio-button>
+    <mat-radio-button value="No">No</mat-radio-button>
   </mat-radio-group>
 </div>
+<br>
 
-<div fxLayout="row">
+<div fxLayout="row" *ngIf="hidden">
     <mat-form-field appearance="fill">
         <mat-label>Vaccine Name</mat-label>
         <mat-select name="Vaccine Name">
@@ -41,17 +42,16 @@
         </mat-select>
       </mat-form-field>
 </div>
-
-<div fxLayout="row"> 
+<div fxLayout="row" *ngIf="hidden"> 
     <mat-label>How many Doses?</mat-label> 
 <mat-radio-group aria-label="Select an option">
     <mat-radio-button value="1">1</mat-radio-button>
     <mat-radio-button value="2">2</mat-radio-button>
   </mat-radio-group>
 </div>
-
+<br>
 <div fxLayout="row"> 
-<button mat-raised-button color="primary">Primary</button>
+<button mat-raised-button color="primary">Save</button>
 
 </div>  
     

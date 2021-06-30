@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatRadioChange } from '@angular/material/radio';
 
 @Component({
   selector: 'app-add-user',
@@ -6,7 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./add-user.component.css']
 })
 export class AddUserComponent implements OnInit {
-  hide = true;
+  hide = false;
+  hidden:boolean = false;
   selectedVaccineName : string = "";
   vaccineName = ["Moderna","Sputnik","Covishield","Covaxine"] 
   constructor() { 
@@ -16,4 +18,10 @@ export class AddUserComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  radioChange($event: MatRadioChange) {
+  
+    console.log($event.source.name, $event.value);
+    this.hidden = ($event.value == "Yes") ? true : false;
+  
+}
 }
