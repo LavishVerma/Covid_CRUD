@@ -1,0 +1,18 @@
+.example-container{
+  border: 2px solid black; 
+  /* display: inline-block; */
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 100px;
+  
+    
+}
+
+.example-form{
+    border: 2px solid black; 
+   
+    display: inline-block;
+ 
+    
+}
