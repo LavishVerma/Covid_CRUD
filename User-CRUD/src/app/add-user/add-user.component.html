@@ -1,9 +1,20 @@
+
 <div class="example-container" >
-    <form class="example-form">
-        <div fxLayout="row" >   
+    <form [formGroup]="userForm" (ngSubmit)="OnSubmit()" class="example-form">
+        <div fxLayout="row" >  
+        
             <mat-form-field fxFlex="600" appearance="fill">
                 <mat-label>Name</mat-label>
-                <input matInput>
+                <input matInput formControlName="name">
+                  <mat-error *ngIf="userForm.controls.name.errors?.required">
+                      {{errorMessages?.name?.required}}
+                  </mat-error>
+                  <mat-error *ngIf="userForm?.controls?.name?.errors?.minlength">
+                      {{errorMessages?.name?.minlength}}
+                </mat-error>
+                <mat-error *ngIf="userForm?.controls?.name?.errors?.pattern">
+                  {{errorMessages?.name?.pattern}}
+            </mat-error>
               </mat-form-field>
 </div>
 
@@ -12,46 +23,62 @@
 
     <mat-form-field  appearance="fill">
         <mat-label>Mobile</mat-label>
-        <input matInput>
+        <input matInput formControlName="mobile">
+        <mat-error *ngIf="userForm.controls.mobile.errors?.required">
+          {{errorMessages?.mobile?.required}}
+      </mat-error>
+        <mat-error *ngIf="userForm?.controls?.mobile?.errors?.minlength || userForm?.controls?.mobile?.errors?.maxlength ">
+          {{errorMessages?.mobile?.length}}
+    </mat-error>
+    <mat-error *ngIf="userForm?.controls?.mobile?.errors?.pattern">
+      {{errorMessages?.mobile?.pattern}}
+</mat-error>
       </mat-form-field>
 </div>
 <div fxLayout="row"  >   
     <mat-form-field appearance="fill">
         <mat-label>Email</mat-label>
-        <input matInput>
+        <input matInput formControlName="email">
+        <mat-error *ngIf="userForm.controls.email.errors?.required">
+          {{errorMessages?.email?.required}}
+      </mat-error>
+      <mat-error *ngIf="userForm?.controls?.email?.errors?.email">
+          {{errorMessages?.email?.pattern}}
+    </mat-error>
       </mat-form-field>
 </div>
 
 
 <div fxLayout="row" > 
     <mat-label>Are you Vaccinated?</mat-label> 
-<mat-radio-group (change)="radioChange($event)" aria-label="Select an option">
-    <mat-radio-button value="Yes">Yes</mat-radio-button>
-    <mat-radio-button value="No">No</mat-radio-button>
+<mat-radio-group formControlName="isvaccinated" (change)="isVaccinatedChange($event)" aria-label="Select an option">
+    <mat-radio-button  value="Yes" [checked]="selectedisvaccinatedvalue" >Yes</mat-radio-button>
+    <mat-radio-button value="No" [checked]="!selectedisvaccinatedvalue">No</mat-radio-button>
   </mat-radio-group>
 </div>
 <br>
 
-<div fxLayout="row" *ngIf="hidden">
+<div fxLayout="row" *ngIf="selectedisvaccinatedvalue">
     <mat-form-field appearance="fill">
         <mat-label>Vaccine Name</mat-label>
-        <mat-select name="Vaccine Name">
-          <mat-option *ngFor="let name of vaccineName" [value]="selectedVaccineName">
+        <mat-select  formControlName="vaccinename" name="Vaccine Name" (selectionChange)="vaccineNameChange($event)">
+          <mat-option value="" disabled>Select an option</mat-option>
+          <mat-option *ngFor="let name of vaccineName" [value]="name">
             {{name}}
           </mat-option>
         </mat-select>
       </mat-form-field>
 </div>
-<div fxLayout="row" *ngIf="hidden"> 
+<div fxLayout="row" *ngIf="selectedisvaccinatedvalue"> 
     <mat-label>How many Doses?</mat-label> 
-<mat-radio-group aria-label="Select an option">
+<mat-radio-group formControlName="noofdoses" (change)="noOfDosesChange($event)" aria-label="Select an option">
     <mat-radio-button value="1">1</mat-radio-button>
     <mat-radio-button value="2">2</mat-radio-button>
   </mat-radio-group>
 </div>
 <br>
 <div fxLayout="row"> 
-<button mat-raised-button color="primary">Save</button>
+<button type="submit" [disabled]="!userForm.valid" mat-raised-button color="primary">Save</button>
 
 </div>  
     
