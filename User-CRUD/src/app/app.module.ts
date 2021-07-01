@@ -18,6 +18,8 @@ import { HeaderComponent } from './header/header.component';
 import {MatTableModule} from '@angular/material/table';
 import { ReactiveFormsModule } from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
+import {MatTooltipModule} from '@angular/material/tooltip';
+
 
 @NgModule({
   declarations: [
@@ -40,7 +42,8 @@ import {HttpClientModule} from '@angular/common/http';
     MatButtonModule,
     MatToolbarModule,
     MatTableModule,
-    HttpClientModule
+    HttpClientModule,
+    MatTooltipModule
 
     
   ],

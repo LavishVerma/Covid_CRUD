@@ -1,32 +1,110 @@
-<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
+
+  <!-- ----------------------------------------------------------------------------------- -->
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
     <!--- Note that these columns can be defined in any order.
           The actual rendered columns are set as a property on the row definition" -->
   
     <!-- Position Column -->
-    <ng-container matColumnDef="position">
-      <th mat-header-cell *matHeaderCellDef> No. </th>
-      <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+    <ng-container matColumnDef="No"> 
+      <th mat-header-cell *matHeaderCellDef> No </th>
+      <td mat-cell *matCellDef="let element"> {{element.id}} </td>
     </ng-container>
   
     <!-- Name Column -->
-    <ng-container matColumnDef="name">
+    <ng-container matColumnDef="Name">
       <th mat-header-cell *matHeaderCellDef> Name </th>
       <td mat-cell *matCellDef="let element"> {{element.name}} </td>
     </ng-container>
   
     <!-- Weight Column -->
-    <ng-container matColumnDef="weight">
-      <th mat-header-cell *matHeaderCellDef> Weight </th>
-      <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
-    </ng-container>
+    <ng-container matColumnDef="Email">
+      <th mat-header-cell *matHeaderCellDef> Email </th>
+      <td mat-cell *matCellDef="let element"> 
+        {{element.email}}
+      </td>
+      </ng-container>
   
     <!-- Symbol Column -->
-    <ng-container matColumnDef="symbol">
-      <th mat-header-cell *matHeaderCellDef> Symbol </th>
-      <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+    <ng-container matColumnDef="Mobile">
+      <th mat-header-cell *matHeaderCellDef> Mobile </th>
+      <td mat-cell *matCellDef="let element"> {{element.mobile}} </td>
     </ng-container>
-  
+
+    
+
+    <ng-container matColumnDef="Vaccinated">
+      <th mat-header-cell *matHeaderCellDef> Vaccinated </th>
+      <td mat-cell *matCellDef="let element"> {{element.isvaccinated}} </td>
+    </ng-container>
+    <ng-container matColumnDef="Vaccine Name">
+      <th mat-header-cell *matHeaderCellDef> Vaccine Name </th>
+      <td mat-cell *matCellDef="let element"> {{element.vaccinename}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="Doses">
+      <th mat-header-cell *matHeaderCellDef> Doses</th>
+      <td mat-cell *matCellDef="let element"> {{element.noofdoses}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="Actions">
+      <th mat-header-cell *matHeaderCellDef> Actions </th>
+      <td mat-cell *matCellDef="let element"> 
+      
+        <button  type="button" (click)="OpenEditModal(element)"  class="btn btn-success btn-sm"  matTooltip="Edit" matTooltipPosition="below" data-toggle="modal" data-target="#exampleModal">
+          <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+        </button>
+      
+
+        <button type="button" (click)="OnDelete(element.id)" matTooltip="Delete" matTooltipPosition="below" class="btn btn-danger btn-sm" style="margin-left: 1rem;">
+          <i class="fa fa-times" aria-hidden="true"></i>
+        </button> 
+      </td>
+    </ng-container>
+    
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
+<!--  EDIT MODAL -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="exampleModalLabel">Edit User</h2>
+      </div>
+      <div class="modal-body">
+        <form  (ngSubmit)="OnSubmit(close)">
+          <div class="form-group">
+            <label  class="col-form-label">ID</label>
+            <input type="text" class="form-control"  readonly>
+          </div>
+          <div class="form-group">
+            <label  class="col-form-label">Name:</label>
+             <input type="text" class="form-control" >
+          </div>
+          <div class="form-group">
+            <label  class="col-form-label">Activation Status:</label>
+            
+             <select class="form-control"  >
+              
+              <option *ngFor="let status of Activation_status_options">{{status}}</option>
+              
+              
+            </select>
+          </div>
+          <div class="form-group">
+            <label  class="col-form-label">Date of Birth:</label>
+             <input type="text" class="form-control" readonly   >
+          </div>
+          <div class="modal-footer">
+            <button type="submit"  class="btn btn-success">Save changes</button>
+            <button type="button" #close class="btn btn-danger" data-dismiss="modal">Close</button>
+            
+          </div>
+        </form>
+      </div>
+     
+    </div>
+  </div>
+</div>
+
