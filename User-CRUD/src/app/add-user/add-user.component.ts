@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
 import { MatSelectChange } from '@angular/material/select';
+import { Router } from '@angular/router';
 import { User } from '../Models/user.model';
 import { UserAddService } from '../Services/user-add.service';
 
@@ -29,8 +30,8 @@ export class AddUserComponent implements OnInit {
   usermodel: User = new User();
   selectedisvaccinatedvalue:boolean= false;
   userForm!: FormGroup;
-  vaccineName = ["Moderna","Sputnik","Covishield","Covaxine"] 
-  constructor(private fb: FormBuilder,private  service:UserAddService) { 
+  vaccineName = ["Moderna","Sputnik","Covishield","Covaxine","Pfizer"] 
+  constructor(private fb: FormBuilder,private  service:UserAddService, private router: Router) { 
     
   }
   
@@ -67,9 +68,13 @@ export class AddUserComponent implements OnInit {
   this.saveDataInModel();
     console.log(this.usermodel);
     
-  //  this.service.saveUser(this.usermodel).subscribe((response)=>{
-  //    console.log('Response recieved==>',response);
-  //  });
+   this.service.saveUser(this.usermodel).subscribe((response)=>{
+     console.log('Response recieved==>',response);
+     if(response){
+       this.service.setHeaderFlag(true);
+      this.router.navigate(['view']);
+     }
+   });
     
    
     

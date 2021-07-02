@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { NavigationEnd, Route, Router } from '@angular/router';
+import { UserAddService } from '../Services/user-add.service';
 
 export interface PeriodicElement {
   name: string;
@@ -28,9 +30,12 @@ export class HeaderComponent implements OnInit {
 
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
   dataSource = ELEMENT_DATA;
-  constructor() { }
+  constructor(private service: UserAddService) { }
+ // headerFlag:boolean= false;
 
   ngOnInit(): void {
+
+  //  this.service.getHeaderFlag().subscribe(flag=>this.headerFlag = flag);
   }
 
 }

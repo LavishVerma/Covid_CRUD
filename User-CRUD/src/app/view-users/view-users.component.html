@@ -6,9 +6,10 @@
           The actual rendered columns are set as a property on the row definition" -->
   
     <!-- Position Column -->
+
     <ng-container matColumnDef="No"> 
       <th mat-header-cell *matHeaderCellDef> No </th>
-      <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+      <td mat-cell *matCellDef="let element; let i = index;"> {{i+1}} </td>
     </ng-container>
   
     <!-- Name Column -->
@@ -56,7 +57,7 @@
         </button>
       
 
-        <button type="button" (click)="OnDelete(element.id)" matTooltip="Delete" matTooltipPosition="below" class="btn btn-danger btn-sm" style="margin-left: 1rem;">
+        <button type="button" (click)="OnDelete(element.id)" matTooltip="Delete" matTooltipPosition="below" (click)="openDialog()" class="btn btn-danger btn-sm" style="margin-left: 1rem;">
           <i class="fa fa-times" aria-hidden="true"></i>
         </button> 
       </td>
@@ -107,4 +108,7 @@
     </div>
   </div>
 </div>
+
+
+  
 

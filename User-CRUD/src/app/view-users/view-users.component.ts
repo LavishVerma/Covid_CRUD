@@ -55,10 +55,17 @@ export class ViewUsersComponent implements OnInit {
       noofdoses:['']
     });
 
+    this.service.getAllUsers().subscribe((data:any)=>{
+      this.dataSource = data;
+    });
+
     // this.service.GetAllUser().subscribe((list:any)=>{ 
     //   this.dataSource=list;
     //   console.log(this.dataSource); 
     // });
+  }
+  openDialog(){
+
   }
 
   OnDelete(id:number){
@@ -88,7 +95,7 @@ export class ViewUsersComponent implements OnInit {
   
   OnSubmit(button: HTMLButtonElement ){
    
- 
+ //this.service.setHeaderFlag(false);
      } 
     
     
