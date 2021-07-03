@@ -2,6 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { User } from '../Models/user.model';
+import { DialogService } from '../Services/dialog.service';
 import { UserAddService } from '../Services/user-add.service';
 
 export interface PeriodicElement {
@@ -42,11 +43,11 @@ export class ViewUsersComponent implements OnInit {
   Activation_status_options: string[]=['true','false'];
   userForm!: FormGroup;
   datebeforepipe!: Date;
-
-  constructor(private fb: FormBuilder, private service: UserAddService) { }
+  editrownumber!:number;
+  constructor(private fb: FormBuilder, private userAddService: UserAddService,private dialogService: DialogService) { }
 
   ngOnInit(): void {
-    this.service.setHeaderFlag(false);
+    this.userAddService.setHeaderFlag(false);
     this.userForm = this.fb.group({
       name: ['',[Validators.required,Validators.minLength(3),Validators.pattern('^[a-zA-Z ]*$')]],  //First value is the initial value
       email: ['',[Validators.required,Validators.email]],
@@ -56,7 +57,7 @@ export class ViewUsersComponent implements OnInit {
       noofdoses:['']
     });
 
-    this.service.getAllUsers().subscribe((data:any)=>{
+    this.userAddService.getAllUsers().subscribe((data:any)=>{
       this.dataSource = data;
     });
 
@@ -70,6 +71,7 @@ export class ViewUsersComponent implements OnInit {
   }
 
   OnDelete(id:number){
+    this.dialogService.openDeleteDialog();
     // this.service.DeleteUser(id).subscribe((data)=>{
     //   if(data){
     //     this.dataSource.filter((num : any)=>{
@@ -83,6 +85,7 @@ export class ViewUsersComponent implements OnInit {
   }
 
   OpenEditModal(user: User){
+    //this.dialogService.openEditDialog();
     // this.EditModalData=user;
     // this.EditForm.get('id')?.setValue(user.id);
     // this.EditForm.get('name')?.setValue(user.name);
@@ -99,7 +102,17 @@ export class ViewUsersComponent implements OnInit {
  
      } 
     
+  setEditMode(id:any,element:User){
+    console.log(element);
     
+     this.editrownumber = id;
+   
+  } 
+  isEditMode(id:any){
+
+    return (id == this.editrownumber);
+  }
+  
   
 
   getValue(name: string) {

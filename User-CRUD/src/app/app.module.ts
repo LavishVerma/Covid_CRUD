@@ -20,6 +20,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatDialogModule} from '@angular/material/dialog';
+import { DeleteDialogComponent } from './Dialog/delete-dialog/delete-dialog.component';
 
 
 @NgModule({
@@ -27,8 +28,10 @@ import {MatDialogModule} from '@angular/material/dialog';
     AppComponent,
     AddUserComponent,
     ViewUsersComponent,
-    HeaderComponent
+    HeaderComponent,
+    DeleteDialogComponent,
   ],
+  entryComponents:[DeleteDialogComponent],
   imports: [
     BrowserModule,
     ReactiveFormsModule,
