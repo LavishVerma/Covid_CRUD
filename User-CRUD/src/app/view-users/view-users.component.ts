@@ -46,6 +46,7 @@ export class ViewUsersComponent implements OnInit {
   constructor(private fb: FormBuilder, private service: UserAddService) { }
 
   ngOnInit(): void {
+    this.service.setHeaderFlag(false);
     this.userForm = this.fb.group({
       name: ['',[Validators.required,Validators.minLength(3),Validators.pattern('^[a-zA-Z ]*$')]],  //First value is the initial value
       email: ['',[Validators.required,Validators.email]],
@@ -95,7 +96,7 @@ export class ViewUsersComponent implements OnInit {
   
   OnSubmit(button: HTMLButtonElement ){
    
- //this.service.setHeaderFlag(false);
+ 
      } 
     
     

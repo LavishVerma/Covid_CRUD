@@ -36,6 +36,7 @@ export class AddUserComponent implements OnInit {
   }
   
   ngOnInit(): void {
+    this.service.setHeaderFlag(true);
     this.userForm = this.fb.group({
       name: ['',[Validators.required,Validators.minLength(3),Validators.pattern('^[a-zA-Z ]*$')]],  //First value is the initial value
       email: ['',[Validators.required,Validators.email]],
@@ -71,7 +72,7 @@ export class AddUserComponent implements OnInit {
    this.service.saveUser(this.usermodel).subscribe((response)=>{
      console.log('Response recieved==>',response);
      if(response){
-       this.service.setHeaderFlag(true);
+      
       this.router.navigate(['view']);
      }
    });

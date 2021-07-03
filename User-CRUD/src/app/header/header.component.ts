@@ -31,11 +31,11 @@ export class HeaderComponent implements OnInit {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
   dataSource = ELEMENT_DATA;
   constructor(private service: UserAddService) { }
- // headerFlag:boolean= false;
+  headerFlag:boolean= false;
 
   ngOnInit(): void {
 
-  //  this.service.getHeaderFlag().subscribe(flag=>this.headerFlag = flag);
+  this.service.getHeaderFlag().subscribe(flag=>this.headerFlag = flag);
   }
 
 }
