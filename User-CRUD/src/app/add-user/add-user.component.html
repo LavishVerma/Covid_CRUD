@@ -5,7 +5,7 @@
         
             <mat-form-field fxFlex="600" appearance="fill">
                 <mat-label>Name</mat-label>
-                <input matInput formControlName="name">
+                <input matInput formControlName="name"  >
                   <mat-error *ngIf="userForm.controls.name.errors?.required">
                       {{errorMessages?.name?.required}}
                   </mat-error>
@@ -23,7 +23,7 @@
 
     <mat-form-field  appearance="fill">
         <mat-label>Mobile</mat-label>
-        <input matInput formControlName="mobile">
+        <input matInput formControlName="mobile"  maxlength="10">
         <mat-error *ngIf="userForm.controls.mobile.errors?.required">
           {{errorMessages?.mobile?.required}}
       </mat-error>
