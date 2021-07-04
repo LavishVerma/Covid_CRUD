@@ -21,6 +21,7 @@ import {HttpClientModule} from '@angular/common/http';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatDialogModule} from '@angular/material/dialog';
 import { DeleteDialogComponent } from './Dialog/delete-dialog/delete-dialog.component';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 
 @NgModule({
@@ -48,7 +49,8 @@ import { DeleteDialogComponent } from './Dialog/delete-dialog/delete-dialog.comp
     MatTableModule,
     HttpClientModule,
     MatTooltipModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSnackBarModule
 
     
   ],

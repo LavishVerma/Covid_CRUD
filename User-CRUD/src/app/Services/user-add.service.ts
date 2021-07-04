@@ -20,6 +20,10 @@ export class UserAddService {
     return this.http.get(this.baseURL+'user/view');
   }
 
+  deleteUser(id:any){
+    return this.http.delete(this.baseURL+'user/save/'+id);
+  }
+
   getHeaderFlag() {
     return this.headerFlag.asObservable();
   }

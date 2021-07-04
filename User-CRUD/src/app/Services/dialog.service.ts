@@ -10,7 +10,8 @@ export class DialogService {
   constructor(private dialog: MatDialog) { }
 
   openDeleteDialog(){
-    let deletedialogRef= this.dialog.open(DeleteDialogComponent);
+    return  this.dialog.open(DeleteDialogComponent);
+    
   }
   
 }

@@ -48,9 +48,8 @@ public class UserController {
 		return new ResponseEntity<>(userList, HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/view/{id}")
+	@DeleteMapping("/save/{id}")
 	public ResponseEntity<Map<String,String>> deleteUserData(@PathVariable("id") Long id){
-		
 		service.deleteUserData(id);
 		Map<String,String> response = new HashMap<>();
 		response.put("message","Data deleted successfully");
@@ -58,7 +57,7 @@ public class UserController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
-	@PutMapping("/view/{id}")
+	@PutMapping("/save/{id}")
 	public ResponseEntity<Map<String,String>> editUserData(@RequestBody User user){
 		
 		service.editUserData(user);

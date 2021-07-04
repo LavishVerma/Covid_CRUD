@@ -1,9 +1,10 @@
-import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { User } from '../Models/user.model';
+import { MatRadioChange } from '@angular/material/radio';
 import { DialogService } from '../Services/dialog.service';
 import { UserAddService } from '../Services/user-add.service';
+import { SnackBarService } from '../Services/snack-bar.service';
 
 export interface PeriodicElement {
   name: string;
@@ -40,15 +41,20 @@ export class ViewUsersComponent implements OnInit {
   noofdoses: 1,
   vaccinename: "Covishield"}];
   EditModalData: User | undefined;
-  Activation_status_options: string[]=['true','false'];
-  userForm!: FormGroup;
+  editForm!: FormGroup;
   datebeforepipe!: Date;
   editrownumber!:number;
-  constructor(private fb: FormBuilder, private userAddService: UserAddService,private dialogService: DialogService) { }
+  isvaccinatedList:string[]=["Yes","No"];
+  noofdosesList:string[]=["1","2"];
+  editmode:Boolean=false;
+  isvaccinatedflag:Boolean= false;
+  vaccineNameList = ["Moderna","Sputnik","Covishield","Covaxine","Pfizer"];
+  dialogvalue:Boolean=false;
+  constructor(private fb: FormBuilder,private snackbarService:SnackBarService, private userAddService: UserAddService,private dialogService: DialogService) { }
 
   ngOnInit(): void {
     this.userAddService.setHeaderFlag(false);
-    this.userForm = this.fb.group({
+    this.editForm = this.fb.group({
       name: ['',[Validators.required,Validators.minLength(3),Validators.pattern('^[a-zA-Z ]*$')]],  //First value is the initial value
       email: ['',[Validators.required,Validators.email]],
       mobile:['',[Validators.required,Validators.minLength(10),Validators.maxLength(10),Validators.pattern('^[0-9]*$')]],
@@ -71,53 +77,80 @@ export class ViewUsersComponent implements OnInit {
   }
 
   OnDelete(id:number){
-    this.dialogService.openDeleteDialog();
-    // this.service.DeleteUser(id).subscribe((data)=>{
-    //   if(data){
-    //     this.dataSource.filter((num : any)=>{
-    //       return num!==id;
-    //     });
-    //   }
-    //   this.ngOnInit();  
-    // });
+    console.log(id);
     
-    // console.log(id);
+    this.dialogService.openDeleteDialog().afterClosed().subscribe(result=>{
+      this.dialogvalue=result;
+      console.log("===>Dialog response",this.dialogvalue);
+      if(this.dialogvalue){
+        this.userAddService.deleteUser(id).subscribe((response:any)=>{
+         if(response)
+         this.snackbarService.openSnackBar("Data deleted successfully","");
+         console.log("Data deleted successfully",response?.message);
+         this.ngOnInit();  
+         
+        });
+      
+        
+      }
+    });
+   
+    
+    
+      
+   
+    
+    // console.log(id);a
   }
 
   OpenEditModal(user: User){
-    //this.dialogService.openEditDialog();
-    // this.EditModalData=user;
-    // this.EditForm.get('id')?.setValue(user.id);
-    // this.EditForm.get('name')?.setValue(user.name);
-    // this.EditForm.get('activation_status')?.setValue(user.activation_status);
-    // this.datebeforepipe=user.birth_date;
     
-    // this.EditForm.get('date_of_birth')?.setValue(this.datepipe.transform(user.birth_date,'mediumDate'));
     
     
   }
   
-  OnSubmit(button: HTMLButtonElement ){
+  OnSubmit( ){
    
  
      } 
     
-  setEditMode(id:any,element:User){
-    console.log(element);
-    
+  setEditMode(id:any,user:User){
+    console.log(user);
+    this.editmode = true;
+    this.isvaccinatedflag=user.isvaccinated;
      this.editrownumber = id;
+
+     this.editForm.get('name')?.setValue(user.name);
+     this.editForm.get('email')?.setValue(user.email);
+     this.editForm.get('mobile')?.setValue(user.mobile);
+     this.editForm.get('isvaccinated')?.setValue(user.isvaccinated==true?"Yes":"No");
+     this.editForm.get('vaccinename')?.setValue(user.vaccinename);
+     this.editForm.get('noofdoses')?.setValue(user.noofdoses);
+    
    
   } 
+  disableEditMode(){
+    this.editmode = false;
+    this.editrownumber=0;
+  }
   isEditMode(id:any){
 
     return (id == this.editrownumber);
   }
   
-  
+  chceckIsVaccinated(value:any){
+    console.log("THis.Flag===>",this.isvaccinatedflag);
+    console.log("value",value);
+    if(value == "Yes")
+    this.isvaccinatedflag = true;
+    if(value == "No")
+    this.isvaccinatedflag = false;
+    console.log("THis.Flag===>",this.isvaccinatedflag);
+  }
 
   getValue(name: string) {
 
-    return this.userForm.get(name)?.value;
+    return this.editForm.get(name)?.value;
   }
 
 
