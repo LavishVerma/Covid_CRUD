@@ -25,6 +25,10 @@ export class UserAddService {
     return this.http.delete(this.baseURL+'user/save/'+id);
   }
 
+  editUser(user: User){
+    return this.http.put(this.baseURL+'user/save',user);
+  }
+
   getHeaderFlag() {
     return this.headerFlag.asObservable();
   }

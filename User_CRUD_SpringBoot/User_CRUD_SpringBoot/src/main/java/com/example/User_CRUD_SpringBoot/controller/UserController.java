@@ -57,7 +57,7 @@ public class UserController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
-	@PutMapping("/save/{id}")
+	@PutMapping("/save")
 	public ResponseEntity<Map<String,String>> editUserData(@RequestBody User user){
 		
 		service.editUserData(user);
