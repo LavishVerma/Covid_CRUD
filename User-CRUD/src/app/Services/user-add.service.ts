@@ -13,6 +13,7 @@ export class UserAddService {
   constructor(private http: HttpClient) { }
 
   saveUser(user: User){
+    
     return  this.http.post(this.baseURL+'user/save',user);
   }
 

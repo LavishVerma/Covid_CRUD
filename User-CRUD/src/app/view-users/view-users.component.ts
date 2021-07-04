@@ -31,6 +31,20 @@ const ELEMENT_DATA: PeriodicElement[] = [
   styleUrls: ['./view-users.component.css']
 })
 export class ViewUsersComponent implements OnInit {
+  
+  errorMessages={
+    name :{required: 'Name is Required.',
+           minlength: 'Minimum 3 characters required.',
+           pattern : 'Only Alphabets allowed'},
+    email    :{required: 'Email is Required.',
+               pattern: ' Invalid Email Pattern.'},
+    mobile    :{required: 'Mobile is Required.',
+                length: ' Please Enter 10 digit Mobile.',
+                pattern: ' Invalid Mobile Pattern.'}
+   
+    
+    
+  };
 
   displayedColumns: string[] = ['No', 'Name', 'Email', 'Mobile','Vaccinated','Vaccine Name','Doses','Actions'];
   dataSource: User[]=[{email: "Lavishverma97@gmail.com",

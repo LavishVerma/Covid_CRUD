@@ -4,6 +4,7 @@ import { MatRadioChange } from '@angular/material/radio';
 import { MatSelectChange } from '@angular/material/select';
 import { Router } from '@angular/router';
 import { User } from '../Models/user.model';
+import { SnackBarService } from '../Services/snack-bar.service';
 import { UserAddService } from '../Services/user-add.service';
 
 @Component({
@@ -31,7 +32,7 @@ export class AddUserComponent implements OnInit {
   selectedisvaccinatedvalue:boolean= false;
   userForm!: FormGroup;
   vaccineName = ["Moderna","Sputnik","Covishield","Covaxine","Pfizer"] 
-  constructor(private fb: FormBuilder,private  service:UserAddService, private router: Router) { 
+  constructor(private fb: FormBuilder,private  service:UserAddService, private router: Router,private snackbarService:SnackBarService) { 
     
   }
   
@@ -66,13 +67,15 @@ export class AddUserComponent implements OnInit {
   }
   
   OnSubmit(){
+    this.userForm.get('isvaccinated')?.setValue(this.selectedisvaccinatedvalue);
   this.saveDataInModel();
+  
     console.log(this.usermodel);
     
    this.service.saveUser(this.usermodel).subscribe((response)=>{
      console.log('Response recieved==>',response);
      if(response){
-      
+      this.snackbarService.openSnackBar("Data saved successfully","");
       this.router.navigate(['view']);
      }
    });
