@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { User } from '../Models/user.model';
@@ -27,6 +27,19 @@ export class UserAddService {
 
   editUser(user: User){
     return this.http.put(this.baseURL+'user/save',user);
+  }
+
+  getUsersPagination(pageIndex:any,pageSize:any){
+    const params = new HttpParams()
+     .set('pageIndex', pageIndex)
+     .set('pageSize', pageSize);
+     console.log(params);
+     
+    return this.http.get(this.baseURL+'user/viewPage',{params});
+  }
+
+  getUsersPaginationDefault(){
+        return this.http.get(this.baseURL+'user/viewPage');
   }
 
   getHeaderFlag() {

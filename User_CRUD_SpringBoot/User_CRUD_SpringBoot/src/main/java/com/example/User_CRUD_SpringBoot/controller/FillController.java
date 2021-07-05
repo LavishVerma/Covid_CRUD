@@ -27,6 +27,7 @@ public class FillController {
 		service.fillDummyUserData(id);
 		Map<String, String> response = new HashMap<>();
 		response.put("message", "Data saved successfully");
+		response.put("success", "true");
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 

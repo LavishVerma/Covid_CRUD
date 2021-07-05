@@ -11,7 +11,6 @@ import lombok.ToString;
 
 @Entity
 @Table(name = "Users")
-@ToString
 public class User {
 
 	@Id
@@ -94,6 +93,12 @@ public class User {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", name=" + name + ", mobile=" + mobile + ", email=" + email + ", vaccinename="
+				+ vaccinename + ", isvaccinated=" + isvaccinated + ", noofdoses=" + noofdoses + "]";
 	}
 	
    

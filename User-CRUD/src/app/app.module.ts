@@ -22,7 +22,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatDialogModule} from '@angular/material/dialog';
 import { DeleteDialogComponent } from './Dialog/delete-dialog/delete-dialog.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
-
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatPaginatorModule} from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,9 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
     HttpClientModule,
     MatTooltipModule,
     MatDialogModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatProgressSpinnerModule,
+    MatPaginatorModule
 
     
   ],

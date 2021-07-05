@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.User_CRUD_SpringBoot.entity.User;
@@ -65,5 +66,14 @@ public class UserController {
 		response.put("message","Data deleted successfully");
 		response.put("success", "true");
 		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@GetMapping("/viewPage")
+	public ResponseEntity<List<User>> viewPageData(@RequestParam(defaultValue = "0") Integer pageIndex, @RequestParam(defaultValue = "5") Integer pageSize) {
+		System.out.println(); 
+		List<User> reponseList = service.viewPageData(pageIndex,pageSize).getContent();
+		
+		
+		return new ResponseEntity<List<User>>(reponseList,HttpStatus.OK) ;
 	}
 }

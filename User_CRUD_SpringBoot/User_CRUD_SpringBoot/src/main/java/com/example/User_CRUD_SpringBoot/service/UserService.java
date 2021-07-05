@@ -1,11 +1,16 @@
 package com.example.User_CRUD_SpringBoot.service;
 
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.User_CRUD_SpringBoot.entity.User;
+import com.example.User_CRUD_SpringBoot.repository.UserPagingRepository;
 import com.example.User_CRUD_SpringBoot.repository.UserRepository;
 
 @Service
@@ -13,6 +18,9 @@ public class UserService {
 
 	@Autowired
 	UserRepository repository;
+	
+	@Autowired
+	UserPagingRepository userPagingRepository;
 	
 	public void saveUserData(User user) {
 		if(!user.getIsvaccinated())
@@ -37,6 +45,11 @@ public class UserService {
 	public void editUserData(User user) {
 		this.repository.save(user);
 		
+	}
+
+	public Page<User> viewPageData(Integer pageIndex, Integer pageSize) {
+		Pageable pageable = PageRequest.of(pageIndex, pageSize);
+		return (Page<User>) userPagingRepository.findAll(pageable);
 	}
 
 }

@@ -1,30 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { User } from '../Models/user.model';
 import { MatRadioChange } from '@angular/material/radio';
 import { DialogService } from '../Services/dialog.service';
 import { UserAddService } from '../Services/user-add.service';
 import { SnackBarService } from '../Services/snack-bar.service';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
-}
 
-const ELEMENT_DATA: PeriodicElement[] = [
-  {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
-  {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
-  {position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'},
-  {position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be'},
-  {position: 5, name: 'Boron', weight: 10.811, symbol: 'B'},
-  {position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C'},
-  {position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N'},
-  {position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O'},
-  {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
-  {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
-];
 @Component({
   selector: 'app-view-users',
   templateUrl: './view-users.component.html',
@@ -32,6 +16,8 @@ const ELEMENT_DATA: PeriodicElement[] = [
 })
 export class ViewUsersComponent implements OnInit {
   
+@ViewChild(MatPaginator) paginator !: MatPaginator;
+
   errorMessages={
     name :{required: 'Name is Required.',
            minlength: 'Minimum 3 characters required.',
@@ -45,7 +31,9 @@ export class ViewUsersComponent implements OnInit {
     
     
   };
-
+  length = 100;
+  pageSize = 10;
+  pageSizeOptions: number[] = [5, 10, 25, 100];
   displayedColumns: string[] = ['No', 'Name', 'Email', 'Mobile','Vaccinated','Vaccine Name','Doses','Actions'];
   dataSource: User[]=[{email: "Lavishverma97@gmail.com",
   id: -1,
@@ -64,9 +52,18 @@ export class ViewUsersComponent implements OnInit {
   isvaccinatedflag:Boolean= false;
   vaccineNameList = ["Moderna","Sputnik","Covishield","Covaxine","Pfizer"];
   dialogvalue:Boolean=false;
+  spinnerflag:Boolean=false;
+  matDataSource!:  MatTableDataSource<User>;
+  
   constructor(private fb: FormBuilder,private snackbarService:SnackBarService, private userAddService: UserAddService,private dialogService: DialogService) { }
 
+  ngAfterViewInit() {
+   
+    
+   }
   ngOnInit(): void {
+    console.log("ngOninit");
+    
     this.userAddService.setHeaderFlag(false);
     this.editForm = this.fb.group({
       name: ['',[Validators.required,Validators.minLength(3),Validators.pattern('^[a-zA-Z ]*$')]],  //First value is the initial value
@@ -76,15 +73,17 @@ export class ViewUsersComponent implements OnInit {
       vaccinename:[''],
       noofdoses:['']
     });
-
-    this.userAddService.getAllUsers().subscribe((data:any)=>{
-      this.dataSource = data;
-    });
-
-    // this.service.GetAllUser().subscribe((list:any)=>{ 
-    //   this.dataSource=list;
-    //   console.log(this.dataSource); 
+    this.spinnerflag = false;
+    // this.userAddService.getAllUsers().subscribe((data:any)=>{
+    //   this.dataSource = data;
+    //   this.matDataSource =  new MatTableDataSource(this.dataSource);
+    //   this.matDataSource.paginator = this.paginator;
+    //   this.spinnerflag = true;
+   
+      
     // });
+
+    this.getServerDataDefault();
   }
   openDialog(){
 
@@ -108,15 +107,40 @@ export class ViewUsersComponent implements OnInit {
         
       }
     });
-   
-    
-    
-      
-   
-    
-    // console.log(id);a
+
   }
 
+  public getServerDataDefault(){
+
+    this.spinnerflag = false;
+    this.userAddService.getUsersPaginationDefault().subscribe((response:any)=>{
+      if(response){
+        this.dataSource = response;
+        this.matDataSource =  new MatTableDataSource(this.dataSource);
+        this.matDataSource.paginator = this.paginator;
+        this.spinnerflag = true;
+      }
+      
+      
+    } );
+    //return event;
+  }
+  public getServerData(event?:PageEvent){
+
+   
+    this.spinnerflag = false;
+    this.userAddService.getUsersPagination(event?.pageIndex,event?.pageSize).subscribe((response:any)=>{
+      if(response){
+        this.dataSource = response;
+        this.matDataSource =  new MatTableDataSource(this.dataSource);
+        this.matDataSource.paginator = this.paginator;
+        this.spinnerflag = true;
+      }
+      
+      
+    } );
+    //return event;
+  }
   OpenEditModal(user: User){
     
     
@@ -153,13 +177,10 @@ export class ViewUsersComponent implements OnInit {
   }
   
   chceckIsVaccinated(value:any){
-    console.log("THis.Flag===>",this.isvaccinatedflag);
-    console.log("value",value);
     if(value == "Yes")
     this.isvaccinatedflag = true;
     if(value == "No")
     this.isvaccinatedflag = false;
-    console.log("THis.Flag===>",this.isvaccinatedflag);
   }
 
   getValue(name: string) {

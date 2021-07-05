@@ -1,7 +1,12 @@
 
+<mat-spinner *ngIf="!spinnerflag" style="margin:0 auto;margin-top: 100px;"></mat-spinner>
 
   <!-- ----------------------------------------------------------------------------------- -->
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  <table *ngIf="spinnerflag" mat-table [dataSource]="matDataSource" class="mat-elevation-z8">
+    <!-- If response returned is empty. Print user -->
+    
+     
+  
     <!--- Note that these columns can be defined in any order.
           The actual rendered columns are set as a property on the row definition" -->
   
@@ -129,4 +134,10 @@
   </form>
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <mat-error *ngIf="dataSource.length === 0" style="align-items: center;">
+       There is no data.      
+    </mat-error>
+    
   </table>
+  <mat-paginator #paginator [length]="length" [pageSizeOptions]="[5, 10, 25, 100]"  (page)="getServerData($event)" [pageSize]="10" showFirstLastButtons="true"></mat-paginator>
+ 
