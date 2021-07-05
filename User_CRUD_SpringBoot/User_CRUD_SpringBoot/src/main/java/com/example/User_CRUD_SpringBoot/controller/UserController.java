@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -69,11 +72,9 @@ public class UserController {
 	}
 	
 	@GetMapping("/viewPage")
-	public ResponseEntity<List<User>> viewPageData(@RequestParam(defaultValue = "0") Integer pageIndex, @RequestParam(defaultValue = "5") Integer pageSize) {
-		System.out.println(); 
-		List<User> reponseList = service.viewPageData(pageIndex,pageSize).getContent();
+	public ResponseEntity<Page<User>> viewPageData(@RequestParam(defaultValue = "0") Integer pageIndex, @RequestParam(defaultValue = "10") Integer pageSize) {
+		Page<User> responseList = service.viewPageData(pageIndex,pageSize);
+		return new ResponseEntity<>(responseList,HttpStatus.OK);
 		
-		
-		return new ResponseEntity<List<User>>(reponseList,HttpStatus.OK) ;
 	}
 }

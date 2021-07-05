@@ -16,7 +16,7 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class ViewUsersComponent implements OnInit {
   
-@ViewChild(MatPaginator) paginator !: MatPaginator;
+@ViewChild(MatPaginator,{static:true}) paginator !: MatPaginator;
 
   errorMessages={
     name :{required: 'Name is Required.',
@@ -31,9 +31,9 @@ export class ViewUsersComponent implements OnInit {
     
     
   };
-  length = 100;
+  length = -1;
   pageSize = 10;
-  pageSizeOptions: number[] = [5, 10, 25, 100];
+  pageSizeOptions: number[] = [5, 10, 25, 50, 100];
   displayedColumns: string[] = ['No', 'Name', 'Email', 'Mobile','Vaccinated','Vaccine Name','Doses','Actions'];
   dataSource: User[]=[{email: "Lavishverma97@gmail.com",
   id: -1,
@@ -114,10 +114,16 @@ export class ViewUsersComponent implements OnInit {
 
     this.spinnerflag = false;
     this.userAddService.getUsersPaginationDefault().subscribe((response:any)=>{
+      console.log("====",response);
+      
       if(response){
-        this.dataSource = response;
+        this.dataSource = response.content;
+        this.length=response.totalElements;
+       
+        
         this.matDataSource =  new MatTableDataSource(this.dataSource);
         this.matDataSource.paginator = this.paginator;
+        this.paginator.length = response.totalElements; 
         this.spinnerflag = true;
       }
       
@@ -127,13 +133,23 @@ export class ViewUsersComponent implements OnInit {
   }
   public getServerData(event?:PageEvent){
 
+   console.log(this.paginator.pageIndex, this.paginator.pageSize);
    
     this.spinnerflag = false;
     this.userAddService.getUsersPagination(event?.pageIndex,event?.pageSize).subscribe((response:any)=>{
       if(response){
-        this.dataSource = response;
+        console.log(response);
+        
+        this.dataSource = response.content;
+        this.length=response.totalElements;
+        
+
+       
         this.matDataSource =  new MatTableDataSource(this.dataSource);
         this.matDataSource.paginator = this.paginator;
+        console.log("LENGTH==",response.totalElements);
+        
+        this.paginator.length = response.totalElements; 
         this.spinnerflag = true;
       }
       
