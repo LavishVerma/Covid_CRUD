@@ -7,6 +7,8 @@ import { UserAddService } from '../Services/user-add.service';
 import { SnackBarService } from '../Services/snack-bar.service';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { UserDatasourceService } from '../Services/user-datasource.service';
+import { tap } from 'rxjs/operators';
 
 
 @Component({
@@ -54,11 +56,29 @@ export class ViewUsersComponent implements OnInit {
   dialogvalue:Boolean=false;
   spinnerflag:Boolean=false;
   matDataSource!:  MatTableDataSource<User>;
-  
+  userDatasource!: UserDatasourceService;
+  pageNumber!:number;
   constructor(private fb: FormBuilder,private snackbarService:SnackBarService, private userAddService: UserAddService,private dialogService: DialogService) { }
 
-  ngAfterViewInit() {
-   
+  ngAfterContentInit() {
+    console.log(this.paginator.pageIndex  );
+    
+    console.log("ngAfterViewInit");
+    this.matDataSource =  new MatTableDataSource(this.dataSource);
+    this.userDatasource.counter$
+      .pipe(
+        tap((count) => {
+          this.paginator.length = count;
+        })
+      )
+      .subscribe();
+
+    this.paginator.page
+      .pipe(
+        tap(() => this.loadUsers())
+      )
+      .subscribe();
+      console.log("Spin==",this.spinnerflag);
     
    }
   ngOnInit(): void {
@@ -82,8 +102,14 @@ export class ViewUsersComponent implements OnInit {
    
       
     // });
-
-    this.getServerDataDefault();
+    
+  
+    this.userDatasource = new UserDatasourceService(this.userAddService);
+    this.userDatasource.loading$.subscribe(flag=>this.spinnerflag);
+    console.log("Spinner==",this.spinnerflag);
+    
+    this.userDatasource.loadUsers();
+   // this.getServerData();
   }
   openDialog(){
 
@@ -100,7 +126,7 @@ export class ViewUsersComponent implements OnInit {
          if(response)
          this.snackbarService.openSnackBar("Data deleted successfully","");
          console.log("Data deleted successfully",response?.message);
-         this.ngOnInit();  
+         this.loadUsers(); 
          
         });
       
@@ -114,14 +140,16 @@ export class ViewUsersComponent implements OnInit {
 
     this.spinnerflag = false;
     this.userAddService.getUsersPaginationDefault().subscribe((response:any)=>{
-      console.log("====",response);
+      console.log("Response====",response);
+      console.log("Paginator====",this.paginator);
       
+
       if(response){
         this.dataSource = response.content;
         this.length=response.totalElements;
-       
+        this.matDataSource.data= response.content;
         
-        this.matDataSource =  new MatTableDataSource(this.dataSource);
+       
         this.matDataSource.paginator = this.paginator;
         this.paginator.length = response.totalElements; 
         this.spinnerflag = true;
@@ -131,21 +159,21 @@ export class ViewUsersComponent implements OnInit {
     } );
     //return event;
   }
-  public getServerData(event?:PageEvent){
+  public getServerData(){
 
    console.log(this.paginator.pageIndex, this.paginator.pageSize);
    
     this.spinnerflag = false;
-    this.userAddService.getUsersPagination(event?.pageIndex,event?.pageSize).subscribe((response:any)=>{
+    this.userAddService.getUsersPagination(this.paginator.pageIndex=0,this.paginator.pageSize=10).subscribe((response:any)=>{
       if(response){
         console.log(response);
         
         this.dataSource = response.content;
         this.length=response.totalElements;
-        
+        this.matDataSource.data= response.content;
 
        
-        this.matDataSource =  new MatTableDataSource(this.dataSource);
+        // this.matDataSource =  new MatTableDataSource(this.dataSource);
         this.matDataSource.paginator = this.paginator;
         console.log("LENGTH==",response.totalElements);
         
@@ -202,6 +230,37 @@ export class ViewUsersComponent implements OnInit {
   getValue(name: string) {
 
     return this.editForm.get(name)?.value;
+  }
+
+  
+  // ngOnInit() {
+  //   this.userDatasource = new UserDatasourceService(this.userAddService);
+  //   this.userDatasource.loadUsers();
+  // }
+
+  // ngAfterViewInit() {
+  //   this.userDatasource.counter$
+  //     .pipe(
+  //       tap((count) => {
+  //         this.paginator.length = count;
+  //       })
+  //     )
+  //     .subscribe();
+
+  //   this.paginator.page
+  //     .pipe(
+  //       tap(() => this.loadUsers())
+  //     )
+  //     .subscribe();
+  // }
+
+  loadUsers() {
+    this.userDatasource.loadUsers(this.paginator.pageIndex, this.paginator.pageSize);
+    this.pageNumber = (this.paginator.pageIndex*this.paginator.pageSize)+1;
+    console.log("Spin==",this.spinnerflag);
+    console.log(this.paginator.pageIndex, " <---> ",this.paginator.pageSize);
+    
+    
   }
 
 
