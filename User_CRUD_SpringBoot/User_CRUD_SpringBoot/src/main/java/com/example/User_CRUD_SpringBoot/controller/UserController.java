@@ -72,8 +72,11 @@ public class UserController {
 	}
 	
 	@GetMapping("/viewPage")
-	public ResponseEntity<Page<User>> viewPageData(@RequestParam(defaultValue = "0") Integer pageIndex, @RequestParam(defaultValue = "10") Integer pageSize) {
-		Page<User> responseList = service.viewPageData(pageIndex,pageSize);
+	public ResponseEntity<Page<User>> viewPageData(
+			@RequestParam(defaultValue = "0") Integer pageIndex,
+			@RequestParam(defaultValue = "10") Integer pageSize
+			,@RequestParam(defaultValue = "name") String sortBy) {
+		Page<User> responseList = service.viewPageData(pageIndex,pageSize,sortBy);
 		return new ResponseEntity<>(responseList,HttpStatus.OK);
 		
 	}

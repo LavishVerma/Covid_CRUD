@@ -28,7 +28,9 @@ export class ViewUsersComponent implements OnInit {
                pattern: ' Invalid Email Pattern.'},
     mobile    :{required: 'Mobile is Required.',
                 length: ' Please Enter 10 digit Mobile.',
-                pattern: ' Invalid Mobile Pattern.'}
+                pattern: ' Invalid Mobile Pattern.'},
+    vaccinename   :{required: 'Select any option.'},
+    noofdoses : { required: 'Select any option.'}            
    
     
     
@@ -44,7 +46,7 @@ export class ViewUsersComponent implements OnInit {
   name: "Lavish",
   noofdoses: 1,
   vaccinename: "Covishield"}];
-  EditModalData: User | undefined;
+  EditModalData!: User;
   editForm!: FormGroup;
   datebeforepipe!: Date;
   editrownumber!:number;
@@ -86,6 +88,7 @@ export class ViewUsersComponent implements OnInit {
     
     this.userAddService.setHeaderFlag(false);
     this.editForm = this.fb.group({
+      id: [''],
       name: ['',[Validators.required,Validators.minLength(3),Validators.pattern('^[a-zA-Z ]*$')]],  //First value is the initial value
       email: ['',[Validators.required,Validators.email]],
       mobile:['',[Validators.required,Validators.minLength(10),Validators.maxLength(10),Validators.pattern('^[0-9]*$')]],
@@ -105,9 +108,7 @@ export class ViewUsersComponent implements OnInit {
     
   
     this.userDatasource = new UserDatasourceService(this.userAddService);
-    this.userDatasource.loading$.subscribe(flag=>this.spinnerflag);
-    console.log("Spinner==",this.spinnerflag);
-    
+    this.userDatasource.loading$.subscribe(flag=>this.spinnerflag);    
     this.userDatasource.loadUsers();
    // this.getServerData();
   }
@@ -136,55 +137,8 @@ export class ViewUsersComponent implements OnInit {
 
   }
 
-  public getServerDataDefault(){
-
-    this.spinnerflag = false;
-    this.userAddService.getUsersPaginationDefault().subscribe((response:any)=>{
-      console.log("Response====",response);
-      console.log("Paginator====",this.paginator);
-      
-
-      if(response){
-        this.dataSource = response.content;
-        this.length=response.totalElements;
-        this.matDataSource.data= response.content;
-        
-       
-        this.matDataSource.paginator = this.paginator;
-        this.paginator.length = response.totalElements; 
-        this.spinnerflag = true;
-      }
-      
-      
-    } );
-    //return event;
-  }
-  public getServerData(){
-
-   console.log(this.paginator.pageIndex, this.paginator.pageSize);
-   
-    this.spinnerflag = false;
-    this.userAddService.getUsersPagination(this.paginator.pageIndex=0,this.paginator.pageSize=10).subscribe((response:any)=>{
-      if(response){
-        console.log(response);
-        
-        this.dataSource = response.content;
-        this.length=response.totalElements;
-        this.matDataSource.data= response.content;
-
-       
-        // this.matDataSource =  new MatTableDataSource(this.dataSource);
-        this.matDataSource.paginator = this.paginator;
-        console.log("LENGTH==",response.totalElements);
-        
-        this.paginator.length = response.totalElements; 
-        this.spinnerflag = true;
-      }
-      
-      
-    } );
-    //return event;
-  }
+  
+ 
   OpenEditModal(user: User){
     
     
@@ -192,6 +146,7 @@ export class ViewUsersComponent implements OnInit {
   }
   
   OnSubmit( ){
+   console.log(this.editForm.value);
    
  
      } 
@@ -202,12 +157,21 @@ export class ViewUsersComponent implements OnInit {
     this.isvaccinatedflag=user.isvaccinated;
      this.editrownumber = id;
 
+     this.editForm.get('id')?.setValue(user.id);
      this.editForm.get('name')?.setValue(user.name);
      this.editForm.get('email')?.setValue(user.email);
      this.editForm.get('mobile')?.setValue(user.mobile);
      this.editForm.get('isvaccinated')?.setValue(user.isvaccinated==true?"Yes":"No");
-     this.editForm.get('vaccinename')?.setValue(user.vaccinename);
-     this.editForm.get('noofdoses')?.setValue(user.noofdoses);
+     if(user.isvaccinated){
+
+      this.editForm.get('vaccinename')?.setValue(user.vaccinename);
+      this.editForm.get('noofdoses')?.setValue(user.noofdoses);
+     }
+     else{
+
+      this.editForm.get('vaccinename')?.setValue("");
+      this.editForm.get('noofdoses')?.setValue("");
+     }
     
    
   } 
@@ -221,10 +185,21 @@ export class ViewUsersComponent implements OnInit {
   }
   
   chceckIsVaccinated(value:any){
-    if(value == "Yes")
+    if(value == "Yes"){
     this.isvaccinatedflag = true;
-    if(value == "No")
+    this.editForm.get('noofdoses')?.setValidators(Validators.required);
+    this.editForm.get('vaccinename')?.setValidators(Validators.required);
+   
+    
+    }
+    if(value == "No"){
     this.isvaccinatedflag = false;
+    this.editForm.get('vaccinename')?.clearValidators();
+    this.editForm.get('noofdoses')?.clearValidators();
+    this.editForm.get('vaccinename')?.setValue("");
+    this.editForm.get('noofdoses')?.setValue(0);
+    
+    }
   }
 
   getValue(name: string) {
@@ -232,33 +207,37 @@ export class ViewUsersComponent implements OnInit {
     return this.editForm.get(name)?.value;
   }
 
+  saveData(){
+    this. setFormDataIntoModel();
+    this.userAddService.editUser(this.EditModalData).subscribe((response)=>{
+    if(response)
+      this.snackbarService.openSnackBar("User Updated successfully","");
+      this.disableEditMode();
+      this.loadUsers(); 
+    
+    });
+   console.log(this.EditModalData);
+   
+  }
   
-  // ngOnInit() {
-  //   this.userDatasource = new UserDatasourceService(this.userAddService);
-  //   this.userDatasource.loadUsers();
-  // }
+  setFormDataIntoModel()
+  {
+    this.EditModalData={
+      id:this.getValue('id'),
+      email:this.getValue('email'),
+      isvaccinated: this.getValue('isvaccinated')=="Yes"?true:false,
+      mobile:this.getValue('mobile'),
+      name:this.getValue('name'),
+      noofdoses:this.getValue('noofdoses'),
+      vaccinename:this.getValue('vaccinename')
 
-  // ngAfterViewInit() {
-  //   this.userDatasource.counter$
-  //     .pipe(
-  //       tap((count) => {
-  //         this.paginator.length = count;
-  //       })
-  //     )
-  //     .subscribe();
-
-  //   this.paginator.page
-  //     .pipe(
-  //       tap(() => this.loadUsers())
-  //     )
-  //     .subscribe();
-  // }
+    };
+  }
+  
 
   loadUsers() {
     this.userDatasource.loadUsers(this.paginator.pageIndex, this.paginator.pageSize);
     this.pageNumber = (this.paginator.pageIndex*this.paginator.pageSize)+1;
-    console.log("Spin==",this.spinnerflag);
-    console.log(this.paginator.pageIndex, " <---> ",this.paginator.pageSize);
     
     
   }

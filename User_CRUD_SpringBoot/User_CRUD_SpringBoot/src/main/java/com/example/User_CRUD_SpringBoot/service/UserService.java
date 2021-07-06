@@ -7,11 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.User_CRUD_SpringBoot.entity.User;
 import com.example.User_CRUD_SpringBoot.repository.UserPagingRepository;
 import com.example.User_CRUD_SpringBoot.repository.UserRepository;
+
+
 
 @Service
 public class UserService {
@@ -47,8 +50,10 @@ public class UserService {
 		
 	}
 
-	public Page<User> viewPageData(Integer pageIndex, Integer pageSize) {
-		Pageable pageable = PageRequest.of(pageIndex, pageSize);
+	public Page<User> viewPageData(Integer pageIndex, Integer pageSize,String sortBy) {
+		
+		
+		Pageable pageable = PageRequest.of(pageIndex, pageSize,Sort.by(sortBy) );
 		return (Page<User>) userPagingRepository.findAll(pageable);
 	}
 

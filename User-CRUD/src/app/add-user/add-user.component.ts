@@ -22,7 +22,9 @@ export class AddUserComponent implements OnInit {
                pattern: ' Invalid Email Pattern.'},
     mobile    :{required: 'Mobile is Required.',
                 length: ' Please Enter 10 digit Mobile.',
-                pattern: ' Invalid Mobile Pattern.'}
+                pattern: ' Invalid Mobile Pattern.'},
+    vaccinename   :{required: 'Select any option.'},
+    noofdoses : { required: 'Select any option.'}
    
     
     
@@ -52,6 +54,17 @@ export class AddUserComponent implements OnInit {
     
     this.selectedisvaccinatedvalue = (event.value == "Yes") ? true : false;
     this.userForm.get('isvaccinated')?.setValue(this.selectedisvaccinatedvalue);
+
+    if(event.value == "Yes"){
+      this.userForm.get('vaccinename')?.setValidators(Validators.required);
+      this.userForm.get('noofdoses')?.setValidators(Validators.required);
+    }else{
+      this.userForm.get('vaccinename')?.clearValidators();
+      this.userForm.get('noofdoses')?.clearValidators();
+      this.userForm.get('vaccinename')?.setValue("");
+      this.userForm.get('noofdoses')?.setValue("");
+    }
+
   }
 
   noOfDosesChange(event: MatRadioChange){
@@ -67,7 +80,7 @@ export class AddUserComponent implements OnInit {
   }
   
   OnSubmit(){
-    this.userForm.get('isvaccinated')?.setValue(this.selectedisvaccinatedvalue);
+  this.userForm.get('isvaccinated')?.setValue(this.selectedisvaccinatedvalue);
   this.saveDataInModel();
   
     console.log(this.usermodel);

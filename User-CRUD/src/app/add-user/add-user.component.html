@@ -66,8 +66,11 @@
           <mat-option *ngFor="let name of vaccineName" [value]="name">
             {{name}}
           </mat-option>
-        </mat-select>
+        </mat-select>       
       </mat-form-field>
+      <mat-error style="margin-top: -18px;" *ngIf="userForm.controls.vaccinename.errors?.required">
+        {{errorMessages?.vaccinename?.required}}
+    </mat-error>
 </div>
 <div fxLayout="row" *ngIf="selectedisvaccinatedvalue"> 
     <mat-label>How many Doses?</mat-label> 
@@ -75,6 +78,9 @@
     <mat-radio-button value="1">1</mat-radio-button>
     <mat-radio-button value="2">2</mat-radio-button>
   </mat-radio-group>
+  <mat-error *ngIf="userForm.controls.noofdoses.errors?.required">
+    {{errorMessages?.noofdoses?.required}}
+</mat-error>
 </div>
 <br>
 <div fxLayout="row"> 
