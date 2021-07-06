@@ -72,7 +72,6 @@ export class AddUserComponent implements OnInit {
   }
 
   vaccineNameChange(event: MatSelectChange){
-    console.log("====>",event.value);
     this.userForm.get('vaccinename')?.setValue(event.value);
     
     
@@ -81,12 +80,8 @@ export class AddUserComponent implements OnInit {
   
   OnSubmit(){
   this.userForm.get('isvaccinated')?.setValue(this.selectedisvaccinatedvalue);
-  this.saveDataInModel();
-  
-    console.log(this.usermodel);
-    
+  this.saveDataInModel();  
    this.service.saveUser(this.usermodel).subscribe((response)=>{
-     console.log('Response recieved==>',response);
      if(response){
       this.snackbarService.openSnackBar("Data saved successfully","");
       this.router.navigate(['view']);

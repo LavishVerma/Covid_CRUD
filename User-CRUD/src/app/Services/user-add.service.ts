@@ -33,7 +33,6 @@ export class UserAddService {
     const params = new HttpParams()
      .set('pageIndex', pageIndex)
      .set('pageSize', pageSize);
-     console.log(params);
      
     return this.http.get(this.baseURL+'user/viewPage',{params});
   }

@@ -63,9 +63,7 @@ export class ViewUsersComponent implements OnInit {
   constructor(private fb: FormBuilder,private snackbarService:SnackBarService, private userAddService: UserAddService,private dialogService: DialogService) { }
 
   ngAfterContentInit() {
-    console.log(this.paginator.pageIndex  );
     
-    console.log("ngAfterViewInit");
     this.matDataSource =  new MatTableDataSource(this.dataSource);
     this.userDatasource.counter$
       .pipe(
@@ -80,11 +78,11 @@ export class ViewUsersComponent implements OnInit {
         tap(() => this.loadUsers())
       )
       .subscribe();
-      console.log("Spin==",this.spinnerflag);
+    
     
    }
   ngOnInit(): void {
-    console.log("ngOninit");
+    
     
     this.userAddService.setHeaderFlag(false);
     this.editForm = this.fb.group({
@@ -112,21 +110,17 @@ export class ViewUsersComponent implements OnInit {
     this.userDatasource.loadUsers();
    // this.getServerData();
   }
-  openDialog(){
-
-  }
+ 
 
   OnDelete(id:number){
-    console.log(id);
+    
     
     this.dialogService.openDeleteDialog().afterClosed().subscribe(result=>{
-      this.dialogvalue=result;
-      console.log("===>Dialog response",this.dialogvalue);
+      this.dialogvalue=result;      
       if(this.dialogvalue){
         this.userAddService.deleteUser(id).subscribe((response:any)=>{
          if(response)
          this.snackbarService.openSnackBar("Data deleted successfully","");
-         console.log("Data deleted successfully",response?.message);
          this.loadUsers(); 
          
         });
@@ -138,21 +132,10 @@ export class ViewUsersComponent implements OnInit {
   }
 
   
- 
-  OpenEditModal(user: User){
-    
-    
-    
-  }
   
-  OnSubmit( ){
-   console.log(this.editForm.value);
-   
- 
-     } 
     
   setEditMode(id:any,user:User){
-    console.log(user);
+    
     this.editmode = true;
     this.isvaccinatedflag=user.isvaccinated;
      this.editrownumber = id;
@@ -189,8 +172,6 @@ export class ViewUsersComponent implements OnInit {
     this.isvaccinatedflag = true;
     this.editForm.get('noofdoses')?.setValidators(Validators.required);
     this.editForm.get('vaccinename')?.setValidators(Validators.required);
-   
-    
     }
     if(value == "No"){
     this.isvaccinatedflag = false;
@@ -216,7 +197,7 @@ export class ViewUsersComponent implements OnInit {
       this.loadUsers(); 
     
     });
-   console.log(this.EditModalData);
+  
    
   }
   

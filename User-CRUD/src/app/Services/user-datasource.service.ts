@@ -34,8 +34,7 @@ export class UserDatasourceService implements DataSource<User> {
             finalize(() => this.loadingSubject.next(true))
         )
         .subscribe((result: any) => {
-          console.log(result);
-            
+         
             this.userSubject.next(result.content);
             this.countSubject.next(result.totalElements);
         }
