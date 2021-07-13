@@ -24,6 +24,8 @@ import { DeleteDialogComponent } from './Dialog/delete-dialog/delete-dialog.comp
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import { LineChartComponent } from './Charts/line-chart/line-chart.component';
+import {NgxEchartsModule} from 'ngx-echarts';
 
 @NgModule({
   declarations: [
@@ -32,6 +34,9 @@ import {MatPaginatorModule} from '@angular/material/paginator';
     ViewUsersComponent,
     HeaderComponent,
     DeleteDialogComponent,
+    LineChartComponent,
+   
+ 
   ],
   entryComponents:[DeleteDialogComponent],
   imports: [
@@ -53,7 +58,10 @@ import {MatPaginatorModule} from '@angular/material/paginator';
     MatDialogModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    NgxEchartsModule.forRoot({
+      echarts: () => import('echarts'),
+    })
 
     
   ],
